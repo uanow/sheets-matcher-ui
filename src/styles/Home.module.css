@@ -114,3 +114,19 @@
     flex-direction: column;
   }
 }
+
+.matches {
+  table-layout: auto;
+  margin: 2rem 0;
+}
+
+.matches th,
+.matches td {
+  padding: 1rem 2rem 1rem 2rem;
+  text-align: center;
+}
+
+.matches thead,
+.matches tr {
+  border-bottom-width: 1px;
+}

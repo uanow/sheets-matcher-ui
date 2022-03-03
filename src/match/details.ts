@@ -10,7 +10,7 @@ export const sendDetailsToChat = async (matchRequest: MatchRequest): Promise<num
   const proposals = (await getProposals(matchRequest, mapRowToProposal)).filter(filterProposals);
 
   const message = requests
-    .map((request) => proposals.map((proposal) => matchToConnectString(request, proposal)))
+    .flatMap((request) => proposals.map((proposal) => matchToConnectString(request, proposal)))
     .filter(Boolean)
     .join('\n\n');
 

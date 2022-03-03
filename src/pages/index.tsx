@@ -19,8 +19,8 @@ const Room: NextPage = () => {
   const [error, setError] = useState('');
 
   const [propsToBeEqual, setPropsToBeEqual] = useState('');
-  const [propsToBeGreater, setPropsToBeGreater] = useState('seats');
-  const [propsToFilter, setPropsToFilter] = useState('rowNumber');
+  const [propsToBeGreater, setPropsToBeGreater] = useState('');
+  const [propsToFilter, setPropsToFilter] = useState('');
   const [valuesToFilter, setValuesToFilter] = useState('');
 
   const [slug, setSlug] = useState('generic');
@@ -144,7 +144,7 @@ const Room: NextPage = () => {
             <input
               className="w-full text-md text-center items-center mb-2"
               type="text"
-              placeholder="Values to filter by for columns above: 'new'"
+              placeholder="Values to filter by for columns above: 'done'"
               value={valuesToFilter}
               onChange={(e) => setValuesToFilter(e.target.value)}
             />

@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Match, MatchRequest } from '../match/types';
 import styles from '../styles/Home.module.css';
@@ -7,12 +8,21 @@ const Match = (props: Match) => {
   return (
     <tr key={props.requestId}>
       <td>{props.requestId}</td>
-      <td>{props.proposalIds.join(' ')}</td>
+      <td>{props.proposalIds.join(', ')}</td>
     </tr>
   );
 };
 
 const Room: NextPage = () => {
+  const router = useRouter();
+  const showAdditionalConfig = router.asPath.endsWith('config');
+
+  const [propsToBeEqual, setPropsToBeEqual] = useState('from');
+  const [propsToBeGreater, setPropsToBeGreater] = useState('seats');
+  const [propsToFilter, setPropsToFilter] = useState('rowNumber');
+  const [valuesToFilter, setValuesToFilter] = useState('');
+
+  const [slug, setSlug] = useState('generic');
   const [requestSpreadsheetId, setRequestSpreadsheetId] = useState('');
   const [requestSheetId, setRequestSheetId] = useState('');
   const [proposalSpreadsheetId, setProposalSpreadsheetId] = useState('');
@@ -22,6 +32,10 @@ const Room: NextPage = () => {
     requestSheetId,
     proposalSpreadsheetId,
     proposalSheetId,
+    propsToBeEqual,
+    propsToBeGreater,
+    propsToFilter,
+    valuesToFilter,
   });
   useEffect(() => {
     setMatchRequest({
@@ -29,9 +43,23 @@ const Room: NextPage = () => {
       requestSheetId,
       proposalSpreadsheetId,
       proposalSheetId,
+      slug,
+      propsToBeEqual,
+      propsToBeGreater,
+      propsToFilter,
+      valuesToFilter,
     });
-  }, [requestSpreadsheetId, requestSheetId, proposalSpreadsheetId, proposalSheetId]);
-  console.log(matchRequest);
+  }, [
+    requestSpreadsheetId,
+    requestSheetId,
+    proposalSpreadsheetId,
+    proposalSheetId,
+    slug,
+    propsToBeEqual,
+    propsToBeGreater,
+    propsToFilter,
+    valuesToFilter,
+  ]);
   const [matches, setMatches] = useState<Match[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const fetchMacthes = async () => {
@@ -82,6 +110,42 @@ const Room: NextPage = () => {
           value={proposalSheetId}
           onChange={(e) => setProposalSheetId(e.target.value)}
         />
+        {showAdditionalConfig && (
+          <>
+            <input
+              className="w-full text-md text-center items-center mb-2"
+              type="text"
+              placeholder="Columns should be same: 'from,to'"
+              value={propsToBeEqual}
+              onChange={(e) => setPropsToBeEqual(e.target.value)}
+            />
+            <input
+              className="w-full text-md text-center items-center mb-2"
+              type="text"
+              placeholder="Columns should be >= 'seats'"
+              value={propsToBeGreater}
+              onChange={(e) => setPropsToBeGreater(e.target.value)}
+            />
+            <input
+              className="w-full text-md text-center items-center mb-2"
+              type="text"
+              placeholder="Columns to filter by: 'status'"
+              value={propsToFilter}
+              onChange={(e) => setPropsToFilter(e.target.value)}
+            />
+            <input
+              className="w-full text-md text-center items-center mb-2"
+              type="text"
+              placeholder="Values to filter by for columns above: 'new'"
+              value={valuesToFilter}
+              onChange={(e) => setValuesToFilter(e.target.value)}
+            />
+          </>
+        )}
+        <select value={slug} onChange={(event) => setSlug(event.target.value)}>
+          <option value="generic">Generic</option>
+          <option value="un-refugee">Refugee</option>
+        </select>
         <button disabled={isLoading} className={styles.card} onClick={fetchMacthes}>
           Find matches
         </button>

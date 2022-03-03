@@ -1,19 +1,11 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
-import {
-  Request,
-  mapRowToRequest,
-  Proposal,
-  mapRowToProposal,
-  Match,
-  proposalIdsToString,
-  MatchRequest,
-} from './types';
+import { Request, Proposal, Match, proposalIdsToString, MatchRequest } from './types';
 
 const CLIENT_EMAIL = process.env.GOOGLE_SHEETS_CLIENT_EMAIL!;
 const PRIVATE_KEY = process.env.GOOGLE_SHEETS_PRIVATE_KEY!.replace(/\\n/g, '\n');
 const SUGGESTIONS_COLUMN = 'V';
 
-export const getRequests = (matchRequest: MatchRequest) =>
+export const getRequests = (matchRequest: MatchRequest, mapRowToRequest: (row: any) => any) =>
   getRows<Request>(
     mapRowToRequest,
     CLIENT_EMAIL,
@@ -21,7 +13,7 @@ export const getRequests = (matchRequest: MatchRequest) =>
     matchRequest.requestSpreadsheetId,
     matchRequest.requestSheetId
   );
-export const getProposals = (matchRequest: MatchRequest) =>
+export const getProposals = (matchRequest: MatchRequest, mapRowToProposal: (row: any) => any) =>
   getRows<Proposal>(
     mapRowToProposal,
     CLIENT_EMAIL,
@@ -40,7 +32,7 @@ export const saveMatchesToRequestSheet = (matchRequest: MatchRequest, matches: M
   );
 
 const getRows = async <T>(
-  mapRow: (row: any) => T,
+  mapRow: (row: any) => any,
   CLIENT_EMAIL: string,
   PRIVATE_KEY: string,
   SPREADSHEET_ID: string,

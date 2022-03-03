@@ -3,6 +3,11 @@ export interface MatchRequest {
   requestSheetId: string;
   proposalSpreadsheetId: string;
   proposalSheetId: string;
+  slug?: string;
+  propsToBeEqual?: string;
+  propsToBeGreater?: string;
+  propsToFilter?: string;
+  valuesToFilter?: string;
 }
 
 export interface Match {

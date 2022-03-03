@@ -22,6 +22,7 @@ const isValid = (matchRequest: MatchRequest): boolean =>
   matchRequest.proposalSheetId?.length > 0;
 
 const mergeRequest = (matchRequest: MatchRequest): MatchRequest => ({
+  ...matchRequest,
   requestSpreadsheetId: matchRequest.requestSpreadsheetId || DEFAULT_MATCH.requestSpreadsheetId,
   requestSheetId: matchRequest.requestSheetId || DEFAULT_MATCH.requestSheetId,
   proposalSpreadsheetId: matchRequest.proposalSpreadsheetId || DEFAULT_MATCH.proposalSpreadsheetId,

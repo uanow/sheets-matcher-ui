@@ -12,7 +12,7 @@ export const sendDetailsToChat = async (matchRequest: MatchRequest): Promise<num
   const message = requests
     .flatMap((request) => proposals.map((proposal) => matchToConnectString(request, proposal)))
     .filter(Boolean)
-    .join('\n\n');
+    .join('%0A%0A');
 
   const response = await fetch(
     `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&text=${message}`
@@ -22,4 +22,4 @@ export const sendDetailsToChat = async (matchRequest: MatchRequest): Promise<num
 };
 
 const matchToConnectString = (request: any, proposal: any) =>
-  `Connect request №${request.rowNumber} by @${request.telegram} with proposal №${proposal.rowNumber} by @${proposal.telegram}`;
+  `Request №${request.rowNumber} by @${request.telegram} <-> Proposal №${proposal.rowNumber} by @${proposal.telegram}.`;

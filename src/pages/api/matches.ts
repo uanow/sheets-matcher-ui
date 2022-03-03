@@ -1,25 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getMatches } from '../../match/match';
-import { Match, MatchRequest } from '../../match/types';
+import { isValid, Match, MatchRequest } from '../../match/types';
 
 type Data = {
   matches: Match[];
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  const matches = await getMatches(mapMatchRequest({ ...req.body }) as MatchRequest);
+  const matchRequest = { ...req.body } as MatchRequest;
+  if (!isValid(matchRequest)) res.status(404);
+  const matches = await getMatches(matchRequest);
   res.status(200).json({ matches });
 }
 
 const mapMatchRequest = (matchRequest: MatchRequest): MatchRequest =>
   //isValid(matchRequest) ? matchRequest : DEFAULT_MATCH;
   mergeRequest(matchRequest);
-
-const isValid = (matchRequest: MatchRequest): boolean =>
-  matchRequest.requestSpreadsheetId?.length > 0 &&
-  matchRequest.requestSheetId?.length > 0 &&
-  matchRequest.proposalSpreadsheetId?.length > 0 &&
-  matchRequest.proposalSheetId?.length > 0;
 
 const mergeRequest = (matchRequest: MatchRequest): MatchRequest => ({
   ...matchRequest,

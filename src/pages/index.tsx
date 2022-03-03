@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Match, MatchRequest } from '../match/types';
+import { isValid, Match, MatchRequest } from '../match/types';
 import styles from '../styles/Home.module.css';
 
 const Match = (props: Match) => {
@@ -16,6 +16,7 @@ const Match = (props: Match) => {
 const Room: NextPage = () => {
   const router = useRouter();
   const showAdditionalConfig = router.asPath.endsWith('config');
+  const [error, setError] = useState('');
 
   const [propsToBeEqual, setPropsToBeEqual] = useState('from');
   const [propsToBeGreater, setPropsToBeGreater] = useState('seats');
@@ -63,16 +64,23 @@ const Room: NextPage = () => {
   const [matches, setMatches] = useState<Match[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const fetchMacthes = async () => {
-    setIsLoading(true);
-    const response = await fetch('/api/matches', {
-      method: 'POST',
-      headers: new Headers({ 'Content-Type': 'application/json' }),
-      credentials: 'same-origin',
-      body: JSON.stringify(matchRequest),
-    });
-    const json = await response.json();
-    setMatches(json.matches);
-    setIsLoading(false);
+    if (!isValid(matchRequest)) return;
+
+    try {
+      setError('');
+      setIsLoading(true);
+      const response = await fetch('/api/matches', {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        credentials: 'same-origin',
+        body: JSON.stringify(matchRequest),
+      });
+      const json = await response.json();
+      setMatches(json.matches);
+      setIsLoading(false);
+    } catch (error) {
+      setError('Please, check spreadhseet id and name.');
+    }
   };
   useEffect(() => {
     fetchMacthes();
@@ -146,9 +154,15 @@ const Room: NextPage = () => {
           <option value="generic">Generic</option>
           <option value="un-refugee">Refugee</option>
         </select>
-        <button disabled={isLoading} className={styles.card} onClick={fetchMacthes}>
+        <button
+          disabled={isLoading || !isValid(matchRequest)}
+          className={styles.card}
+          onClick={fetchMacthes}
+        >
           Find matches
         </button>
+        {error && <p>{error}</p>}
+        {isLoading && <p>Loading...</p>}
       </div>
       <table className={styles.matches}>
         <thead>

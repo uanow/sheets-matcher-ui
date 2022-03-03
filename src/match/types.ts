@@ -10,6 +10,12 @@ export interface MatchRequest {
   valuesToFilter?: string;
 }
 
+export const isValid = (matchRequest: MatchRequest): boolean =>
+  matchRequest.requestSpreadsheetId?.length > 0 &&
+  matchRequest.requestSheetId?.length > 0 &&
+  matchRequest.proposalSpreadsheetId?.length > 0 &&
+  matchRequest.proposalSheetId?.length > 0;
+
 export interface Match {
   requestId: number;
   proposalIds: number[];

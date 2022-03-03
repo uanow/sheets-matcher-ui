@@ -4,10 +4,18 @@ const genericMatch = (
   request: { [key: string]: string | number },
   proposal: { [key: string]: string | number },
   propsToBeEqual: string[],
-  propsToBeGreater: string[]
+  propsToBeGreater: string[],
+  propsToIgnore = ['rowNumber']
 ): boolean =>
-  (propsToBeEqual.find((prop) => request[prop] !== proposal[prop]) || //.toString().toLowerCase()
-    propsToBeGreater.find((prop) => request[prop] > proposal[prop])) === undefined;
+  (propsToBeEqual
+    .filter((prop) => !propsToIgnore.includes(prop) && !propsToBeGreater.includes(prop))
+    .find((prop) => request[prop] !== proposal[prop]) || //.toString().toLowerCase()
+    propsToBeGreater
+      .filter((prop) => !propsToIgnore.includes(prop))
+      .find(
+        (prop) =>
+          +request[prop] > +proposal[prop] && !isNaN(+request[prop]) && !isNaN(+proposal[prop])
+      )) === undefined;
 
 const genericMatchAllPropsEqual = (
   request: { [key: string]: string | number },
@@ -32,8 +40,10 @@ const getGenericMatchFuncs = (matchRequest: MatchRequest) => {
           genericMatch(
             request,
             proposal,
-            matchRequest.propsToBeEqual?.split(',') ?? Object.keys(request), //[],
-            matchRequest.propsToBeGreater?.split(',') ?? []
+            !matchRequest.propsToBeEqual
+              ? Object.keys(request)
+              : matchRequest.propsToBeEqual?.split(',').filter(Boolean),
+            matchRequest.propsToBeGreater?.split(',').filter(Boolean) ?? []
           );
 
   const filterFunc =

@@ -19,10 +19,10 @@ export const getMatches = async (matchRequest: MatchRequest): Promise<Match[]> =
     }))
     .filter((match) => match.proposalIds.length > 0);
 
-  console.log({ proposals, requests, matches: matchesToString(matches) });
+  //console.log({ proposals, requests, matches: matchesToString(matches) });
 
   return matches;
 };
 
-const getMatchFuncs = (matchRequest: MatchRequest) =>
+export const getMatchFuncs = (matchRequest: MatchRequest) =>
   matchRequest.slug === 'un-refugee' ? getRefugeeMatchFuncs : getGenericMatchFuncs(matchRequest);

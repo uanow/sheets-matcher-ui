@@ -11,7 +11,8 @@ export const getRequests = (matchRequest: MatchRequest, mapRowToRequest: (row: a
     CLIENT_EMAIL,
     PRIVATE_KEY,
     matchRequest.requestSpreadsheetId,
-    matchRequest.requestSheetId
+    matchRequest.requestSheetId,
+    matchRequest.requestIdsToFilter
   );
 export const getProposals = (matchRequest: MatchRequest, mapRowToProposal: (row: any) => any) =>
   getRows(
@@ -19,7 +20,8 @@ export const getProposals = (matchRequest: MatchRequest, mapRowToProposal: (row:
     CLIENT_EMAIL,
     PRIVATE_KEY,
     matchRequest.proposalSpreadsheetId,
-    matchRequest.proposalSheetId
+    matchRequest.proposalSheetId,
+    matchRequest.proposalIdsToFilter
   );
 export const saveMatchesToRequestSheet = (matchRequest: MatchRequest, matches: Match[]) =>
   saveMatches(
@@ -36,7 +38,8 @@ const getRows = async (
   CLIENT_EMAIL: string,
   PRIVATE_KEY: string,
   SPREADSHEET_ID: string,
-  SHEET_ID: string
+  SHEET_ID: string,
+  ids: number[] = []
 ) => {
   const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
   await doc.useServiceAccountAuth({
@@ -45,8 +48,9 @@ const getRows = async (
   });
   await doc.loadInfo();
   const sheet = doc.sheetsByTitle[SHEET_ID];
-  const rows = (await sheet.getRows()).map(mapRow);
-  return rows;
+  const rows = await sheet.getRows();
+  const filteredRows = ids.length ? rows.filter((row) => ids.includes(row.rowIndex)) : rows;
+  return filteredRows.map(mapRow);
 };
 
 const saveMatches = async (

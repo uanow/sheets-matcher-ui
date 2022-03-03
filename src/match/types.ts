@@ -6,8 +6,11 @@ export interface MatchRequest {
   slug?: string;
   propsToBeEqual?: string;
   propsToBeGreater?: string;
+  propsToIgnore?: string;
   propsToFilter?: string;
   valuesToFilter?: string;
+  requestIdsToFilter?: number[];
+  proposalIdsToFilter?: number[];
 }
 
 export const isValid = (matchRequest: MatchRequest): boolean =>

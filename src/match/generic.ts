@@ -1,11 +1,13 @@
 import { MatchRequest } from './types';
 
+const DEFAULT_PROPS_TO_IGNORE = ['rowNumber'];
+
 const genericMatch = (
   request: { [key: string]: string | number },
   proposal: { [key: string]: string | number },
   propsToBeEqual: string[],
   propsToBeGreater: string[],
-  propsToIgnore = ['rowNumber']
+  propsToIgnore = DEFAULT_PROPS_TO_IGNORE
 ): boolean =>
   (propsToBeEqual
     .filter((prop) => !propsToIgnore.includes(prop) && !propsToBeGreater.includes(prop))
@@ -20,7 +22,7 @@ const genericMatch = (
 const genericMatchAllPropsEqual = (
   request: { [key: string]: string | number },
   proposal: { [key: string]: string | number },
-  propsToIgnore = ['rowNumber']
+  propsToIgnore = DEFAULT_PROPS_TO_IGNORE
 ): boolean =>
   Object.entries(request).find(
     ([key, value]) => !propsToIgnore.includes(key) && proposal[key.toString()] !== value
@@ -33,9 +35,13 @@ const genericFilter = (
 ): boolean => propsToFilter.find((prop) => valuesToFilter.includes(request[prop])) === undefined;
 
 const getGenericMatchFuncs = (matchRequest: MatchRequest) => {
+  const propsToIgnore = [
+    ...DEFAULT_PROPS_TO_IGNORE,
+    ...(matchRequest.propsToIgnore?.split(',').filter(Boolean) ?? []),
+  ];
   const matchFunc =
     !matchRequest.propsToBeEqual && !matchRequest.propsToBeGreater
-      ? genericMatchAllPropsEqual
+      ? (request: any, proposal: any) => genericMatchAllPropsEqual(request, proposal, propsToIgnore)
       : (request: any, proposal: any) =>
           genericMatch(
             request,
@@ -43,7 +49,8 @@ const getGenericMatchFuncs = (matchRequest: MatchRequest) => {
             !matchRequest.propsToBeEqual
               ? Object.keys(request)
               : matchRequest.propsToBeEqual?.split(',').filter(Boolean),
-            matchRequest.propsToBeGreater?.split(',').filter(Boolean) ?? []
+            matchRequest.propsToBeGreater?.split(',').filter(Boolean) ?? [],
+            propsToIgnore
           );
 
   const filterFunc =

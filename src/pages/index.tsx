@@ -4,22 +4,55 @@ import { useEffect, useState } from 'react';
 import { isValid, Match, MatchRequest } from '../match/types';
 import styles from '../styles/Home.module.css';
 
-const Match = (props: Match) => {
+const Match = ({
+  match,
+  request,
+  showConnect,
+}: {
+  match: Match;
+  request: MatchRequest;
+  showConnect: boolean;
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const requestWithMatch: MatchRequest = {
+    ...request,
+    requestIdsToFilter: [match.requestId],
+    proposalIdsToFilter: match.proposalIds,
+  };
+  const handleConnect = async () => {
+    setIsLoading(true);
+    await fetch('/api/connect', {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      credentials: 'same-origin',
+      body: JSON.stringify(requestWithMatch),
+    });
+    setIsLoading(false);
+  };
   return (
-    <tr key={props.requestId}>
-      <td>{props.requestId}</td>
-      <td>{props.proposalIds.join(', ')}</td>
+    <tr key={match.requestId}>
+      <td>{match.requestId}</td>
+      <td>{match.proposalIds.join(', ')}</td>
+      {showConnect && (
+        <td>
+          <button disabled={isLoading} onClick={handleConnect}>
+            {isLoading ? 'Connecting..' : 'Connect'}
+          </button>
+        </td>
+      )}
     </tr>
   );
 };
 
 const Room: NextPage = () => {
   const router = useRouter();
-  const showAdditionalConfig = router.asPath.endsWith('config');
+  const { config: showConfig = false, connect: showConnect = false } = router.query || {};
   const [error, setError] = useState('');
 
   const [propsToBeEqual, setPropsToBeEqual] = useState('');
   const [propsToBeGreater, setPropsToBeGreater] = useState('');
+  // TODO: Consider mark columns in spreadhseet, so they are ignored (color/note etc). So all setup could be made there.
+  const [propsToIgnore, setPropsToIgnore] = useState('contact,phone,telegram,facebook');
   const [propsToFilter, setPropsToFilter] = useState('');
   const [valuesToFilter, setValuesToFilter] = useState('');
 
@@ -35,6 +68,7 @@ const Room: NextPage = () => {
     proposalSheetId,
     propsToBeEqual,
     propsToBeGreater,
+    propsToIgnore,
     propsToFilter,
     valuesToFilter,
   });
@@ -47,6 +81,7 @@ const Room: NextPage = () => {
       slug,
       propsToBeEqual,
       propsToBeGreater,
+      propsToIgnore,
       propsToFilter,
       valuesToFilter,
     });
@@ -58,6 +93,7 @@ const Room: NextPage = () => {
     slug,
     propsToBeEqual,
     propsToBeGreater,
+    propsToIgnore,
     propsToFilter,
     valuesToFilter,
   ]);
@@ -80,6 +116,7 @@ const Room: NextPage = () => {
       setIsLoading(false);
     } catch (error) {
       setError('Please, check spreadhseet id and name.');
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -118,7 +155,7 @@ const Room: NextPage = () => {
           value={proposalSheetId}
           onChange={(e) => setProposalSheetId(e.target.value)}
         />
-        {showAdditionalConfig && (
+        {showConfig && (
           <>
             <input
               className="w-full text-md text-center items-center mb-2"
@@ -133,6 +170,13 @@ const Room: NextPage = () => {
               placeholder="Columns should be >= 'seats'"
               value={propsToBeGreater}
               onChange={(e) => setPropsToBeGreater(e.target.value)}
+            />
+            <input
+              className="w-full text-md text-center items-center mb-2"
+              type="text"
+              placeholder="Columns should be ignored: 'telegram,phone'"
+              value={propsToIgnore}
+              onChange={(e) => setPropsToIgnore(e.target.value)}
             />
             <input
               className="w-full text-md text-center items-center mb-2"
@@ -169,11 +213,17 @@ const Room: NextPage = () => {
           <tr>
             <th>Request</th>
             <th>Proposals</th>
+            {!!showConnect && <th>Connect</th>}
           </tr>
         </thead>
         <tbody>
           {matches.map((match: Match) => (
-            <Match key={match.requestId} {...match} />
+            <Match
+              key={match.requestId}
+              match={match}
+              request={matchRequest}
+              showConnect={!!showConnect}
+            />
           ))}
         </tbody>
       </table>

@@ -151,8 +151,8 @@ const Room: NextPage = () => {
           </>
         )}
         <select value={slug} onChange={(event) => setSlug(event.target.value)}>
-          <option value="generic">Generic</option>
-          <option value="un-refugee">Refugee</option>
+          <option value="generic">Generic matching</option>
+          <option value="un-refugee">Refugee for UN matching</option>
         </select>
         <button
           disabled={isLoading || !isValid(matchRequest)}

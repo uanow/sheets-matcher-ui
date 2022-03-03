@@ -18,7 +18,7 @@ const Room: NextPage = () => {
   const showAdditionalConfig = router.asPath.endsWith('config');
   const [error, setError] = useState('');
 
-  const [propsToBeEqual, setPropsToBeEqual] = useState('from');
+  const [propsToBeEqual, setPropsToBeEqual] = useState('');
   const [propsToBeGreater, setPropsToBeGreater] = useState('seats');
   const [propsToFilter, setPropsToFilter] = useState('rowNumber');
   const [valuesToFilter, setValuesToFilter] = useState('');

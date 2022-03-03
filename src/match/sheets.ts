@@ -6,40 +6,37 @@ import {
   mapRowToProposal,
   Match,
   proposalIdsToString,
+  MatchRequest,
 } from './types';
 
 const CLIENT_EMAIL = process.env.GOOGLE_SHEETS_CLIENT_EMAIL!;
 const PRIVATE_KEY = process.env.GOOGLE_SHEETS_PRIVATE_KEY!.replace(/\\n/g, '\n');
-const REQUEST_SPREADSHEET_ID = process.env.REQUESTS_SPREADSHEET_ID!;
-const REQUEST_SHEET_ID = process.env.REQUESTS_SHEET_ID!;
-const PROPOSAL_SPREADSHEET_ID = process.env.PROPOSALS_SPREADSHEET_ID!;
-const PROPOSAL_SHEET_ID = process.env.PROPOSALS_SHEET_ID!;
 const SUGGESTIONS_COLUMN = 'V';
 
-export const getRequests = () =>
+export const getRequests = (matchRequest: MatchRequest) =>
   getRows<Request>(
     mapRowToRequest,
     CLIENT_EMAIL,
     PRIVATE_KEY,
-    REQUEST_SPREADSHEET_ID,
-    REQUEST_SHEET_ID
+    matchRequest.requestSpreadsheetId,
+    matchRequest.requestSheetId
   );
-export const getProposals = () =>
+export const getProposals = (matchRequest: MatchRequest) =>
   getRows<Proposal>(
     mapRowToProposal,
     CLIENT_EMAIL,
     PRIVATE_KEY,
-    PROPOSAL_SPREADSHEET_ID,
-    PROPOSAL_SHEET_ID
+    matchRequest.proposalSpreadsheetId,
+    matchRequest.proposalSheetId
   );
-export const saveMatchesToRequestSheet = (matches: Match[]) =>
+export const saveMatchesToRequestSheet = (matchRequest: MatchRequest, matches: Match[]) =>
   saveMatches(
     SUGGESTIONS_COLUMN,
     matches,
     CLIENT_EMAIL,
     PRIVATE_KEY,
-    REQUEST_SPREADSHEET_ID,
-    REQUEST_SHEET_ID
+    matchRequest.requestSpreadsheetId,
+    matchRequest.requestSheetId
   );
 
 const getRows = async <T>(

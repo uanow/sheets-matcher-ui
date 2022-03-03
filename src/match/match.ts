@@ -1,10 +1,10 @@
 import { getProposals, getRequests } from './sheets';
 import { locationTranslations } from './translations';
-import { Match, matchesToString, Request, Proposal } from './types';
+import { Match, matchesToString, Request, Proposal, MatchRequest } from './types';
 
-export const getMatches = async (): Promise<Match[]> => {
-  const requests = (await getRequests()).filter(filterRequests);
-  const proposals = (await getProposals()).filter(filterProposals);
+export const getMatches = async (matchRequest: MatchRequest): Promise<Match[]> => {
+  const requests = (await getRequests(matchRequest)).filter(filterRequests);
+  const proposals = (await getProposals(matchRequest)).filter(filterProposals);
 
   const matches: Match[] = requests
     .map((request) => ({

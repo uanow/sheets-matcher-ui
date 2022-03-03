@@ -8,16 +8,19 @@ const Match = ({
   match,
   request,
   showConnect,
+  chatId,
 }: {
   match: Match;
   request: MatchRequest;
   showConnect: boolean;
+  chatId: string;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const requestWithMatch: MatchRequest = {
     ...request,
     requestIdsToFilter: [match.requestId],
     proposalIdsToFilter: match.proposalIds,
+    chatId,
   };
   const handleConnect = async () => {
     setIsLoading(true);
@@ -46,8 +49,14 @@ const Match = ({
 
 const Room: NextPage = () => {
   const router = useRouter();
-  const { config: showConfig = false, connect: showConnect = false } = router.query || {};
+  const {
+    config: showConfig = false,
+    connect: showConnect = false,
+    chatid: showChatId = false,
+  } = router.query || {};
   const [error, setError] = useState('');
+
+  const [chatId, setChatId] = useState('');
 
   const [propsToBeEqual, setPropsToBeEqual] = useState('');
   const [propsToBeGreater, setPropsToBeGreater] = useState('');
@@ -192,6 +201,15 @@ const Room: NextPage = () => {
               value={valuesToFilter}
               onChange={(e) => setValuesToFilter(e.target.value)}
             />
+            {showChatId && (
+              <input
+                className="w-full text-md text-center items-center mb-2"
+                type="text"
+                placeholder="Telegram chat id"
+                value={chatId}
+                onChange={(e) => setChatId(e.target.value)}
+              />
+            )}
           </>
         )}
         <select value={slug} onChange={(event) => setSlug(event.target.value)}>
@@ -223,6 +241,7 @@ const Room: NextPage = () => {
               match={match}
               request={matchRequest}
               showConnect={!!showConnect}
+              chatId={chatId}
             />
           ))}
         </tbody>

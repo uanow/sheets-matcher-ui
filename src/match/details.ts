@@ -3,7 +3,7 @@ import { getProposals, getRequests } from './sheets';
 import { MatchRequest } from './types';
 
 export const sendDetailsToChat = async (matchRequest: MatchRequest): Promise<number> => {
-  const { filterRequests, filterProposals, match, mapRowToRequest, mapRowToProposal } =
+  const { filterRequests, filterProposals, mapRowToRequest, mapRowToProposal } =
     getMatchFuncs(matchRequest);
 
   const requests = (await getRequests(matchRequest, mapRowToRequest)).filter(filterRequests);
@@ -14,8 +14,9 @@ export const sendDetailsToChat = async (matchRequest: MatchRequest): Promise<num
     .filter(Boolean)
     .join('%0A%0A');
 
+  const chatId = !!matchRequest.chatId ? matchRequest.chatId : process.env.CHAT_ID;
   const response = await fetch(
-    `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&text=${message}`
+    `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage?chat_id=${chatId}&text=${message}`
   );
 
   return response.status;

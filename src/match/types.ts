@@ -11,6 +11,7 @@ export interface MatchRequest {
   valuesToFilter?: string;
   requestIdsToFilter?: number[];
   proposalIdsToFilter?: number[];
+  chatId?: string;
 }
 
 export const isValid = (matchRequest: MatchRequest): boolean =>

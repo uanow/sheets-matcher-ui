@@ -2,9 +2,24 @@ import { MatchRequest } from './types';
 
 const DEFAULT_PROPS_TO_IGNORE = ['rowNumber'];
 
+const haveCommonWords = (request: string, proposal: string): boolean => {
+  // TODO: Use single regex, figure out unicode matching
+  const requestWords = request.match(/\p{Letter}+/gu);
+  const proposalWords = proposal.match(/\p{Letter}+/gu);
+  if (!requestWords || !proposalWords || requestWords.length === 0 || proposalWords.length == 0)
+    return false;
+
+  const lowerCaseProposalWords = proposalWords.map((p) => p.toLowerCase());
+  return !!requestWords.find((r) => lowerCaseProposalWords.includes(r.toLowerCase()));
+
+  // var captures = /\b(\w+)\b.*;.*\b\1\b/i.exec(`${request}&${proposal}`);
+  // return !!captures && !!captures[1];
+};
+
 const genericMatch = (
   request: { [key: string]: string | number },
   proposal: { [key: string]: string | number },
+  propsToHaveCommonWords: string[],
   propsToBeEqual: string[],
   propsToBeGreater: string[],
   propsToIgnore = DEFAULT_PROPS_TO_IGNORE
@@ -12,6 +27,14 @@ const genericMatch = (
   (propsToBeEqual
     .filter((prop) => !propsToIgnore.includes(prop) && !propsToBeGreater.includes(prop))
     .find((prop) => request[prop] !== proposal[prop]) || //.toString().toLowerCase()
+    propsToHaveCommonWords
+      .filter(
+        (prop) =>
+          !propsToIgnore.includes(prop) &&
+          !propsToBeGreater.includes(prop) &&
+          !propsToBeEqual.includes(prop)
+      )
+      .find((prop) => !haveCommonWords(request[prop].toString(), proposal[prop].toString())) ||
     propsToBeGreater
       .filter((prop) => !propsToIgnore.includes(prop))
       .find(
@@ -46,6 +69,7 @@ const getGenericMatchFuncs = (matchRequest: MatchRequest) => {
           genericMatch(
             request,
             proposal,
+            matchRequest.propsToHaveCommonWords?.split(',').filter(Boolean) ?? [],
             !matchRequest.propsToBeEqual
               ? Object.keys(request)
               : matchRequest.propsToBeEqual?.split(',').filter(Boolean),

@@ -62,6 +62,7 @@ const Room: NextPage = () => {
   const [propsToBeGreater, setPropsToBeGreater] = useState('');
   // TODO: Consider mark columns in spreadhseet, so they are ignored (color/note etc). So all setup could be made there.
   const [propsToIgnore, setPropsToIgnore] = useState('contact,phone,telegram,facebook');
+  const [propsToHaveCommonWords, setPropsToHaveCommonWords] = useState('');
   const [propsToFilter, setPropsToFilter] = useState('');
   const [valuesToFilter, setValuesToFilter] = useState('');
 
@@ -78,6 +79,7 @@ const Room: NextPage = () => {
     propsToBeEqual,
     propsToBeGreater,
     propsToIgnore,
+    propsToHaveCommonWords,
     propsToFilter,
     valuesToFilter,
   });
@@ -91,6 +93,7 @@ const Room: NextPage = () => {
       propsToBeEqual,
       propsToBeGreater,
       propsToIgnore,
+      propsToHaveCommonWords,
       propsToFilter,
       valuesToFilter,
     });
@@ -103,6 +106,7 @@ const Room: NextPage = () => {
     propsToBeEqual,
     propsToBeGreater,
     propsToIgnore,
+    propsToHaveCommonWords,
     propsToFilter,
     valuesToFilter,
   ]);
@@ -186,6 +190,13 @@ const Room: NextPage = () => {
               placeholder="Columns should be ignored: 'telegram,phone'"
               value={propsToIgnore}
               onChange={(e) => setPropsToIgnore(e.target.value)}
+            />
+            <input
+              className="w-full text-md text-center items-center mb-2"
+              type="text"
+              placeholder="Columns should have common words: 'list'"
+              value={propsToHaveCommonWords}
+              onChange={(e) => setPropsToHaveCommonWords(e.target.value)}
             />
             <input
               className="w-full text-md text-center items-center mb-2"

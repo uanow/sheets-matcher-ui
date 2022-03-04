@@ -15,6 +15,8 @@ $ yarn dev
 
 [![Demo](https://user-images.githubusercontent.com/729374/156602024-0266f853-f2ca-4175-9ff6-b3762fed1458.png)](https://user-images.githubusercontent.com/729374/156603671-aadf0f50-ae10-4949-90f3-b158c40544b8.mp4)
 
+[![Demo](https://user-images.githubusercontent.com/729374/156756387-72493114-de82-42b1-801b-55e93e20cf95.png)](https://user-images.githubusercontent.com/729374/156756114-1be186e3-315a-48f2-be4f-7d8fac0e3849.mp4)
+
 ## Usage
 
 1. Make your spreadsheets public or share them with special email (ask admin).

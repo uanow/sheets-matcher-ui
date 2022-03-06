@@ -49,8 +49,8 @@ const getRows = async (
   await doc.loadInfo();
   const sheet = doc.sheetsByTitle[SHEET_ID];
   const rows = await sheet.getRows();
-  const filteredRows = ids.length ? rows.filter((row) => ids.includes(row.rowIndex)) : rows;
-  return filteredRows.map(mapRow);
+  const filteredRows = ids?.length ? rows.filter((row) => ids.includes(row.rowIndex)) : rows;
+  return filteredRows?.map(mapRow);
 };
 
 const saveMatches = async (

@@ -1,9 +1,14 @@
+import snakecaseKeys from 'snakecase-keys';
+import camelcaseKeys from 'camelcase-keys';
+import { CamelCaseToSnakeNested } from '../utils/utils';
+
 export interface MatchRequest {
   requestSpreadsheetId: string;
   requestSheetId: string;
   proposalSpreadsheetId: string;
   proposalSheetId: string;
   slug?: string;
+  matchType?: string;
   propsToBeEqual?: string;
   propsToBeGreater?: string;
   propsToHaveCommonWords?: string;
@@ -15,6 +20,14 @@ export interface MatchRequest {
   chatId?: string;
   columnsSendToChat?: string;
 }
+
+export type MatchRequestSnake = CamelCaseToSnakeNested<MatchRequest>;
+
+export const camelToSnake = (matchRequest: MatchRequest): MatchRequestSnake =>
+  snakecaseKeys(matchRequest);
+
+export const snakeToCamel = (matchRequest: MatchRequestSnake): MatchRequest =>
+  camelcaseKeys(matchRequest);
 
 export const isValid = (matchRequest: MatchRequest): boolean =>
   matchRequest.requestSpreadsheetId?.length > 0 &&

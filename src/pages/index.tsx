@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { isValid, Match, MatchRequest } from '../match/types';
 import styles from '../styles/Home.module.css';
+import { slugify } from '../utils/utils';
 
 const Match = ({
   match,
@@ -50,12 +51,51 @@ const Match = ({
   );
 };
 
+export const MatchesTable = ({
+  matches,
+  matchRequest,
+  showConnect,
+  chatId,
+  columnsSendToChat,
+}: {
+  matches: Match[];
+  matchRequest: MatchRequest;
+  showConnect: boolean;
+  chatId: string;
+  columnsSendToChat: string;
+}) => {
+  return (
+    <table className={styles.matches}>
+      <thead>
+        <tr>
+          <th>Request</th>
+          <th>Proposals</th>
+          {!!showConnect && <th>Connect</th>}
+        </tr>
+      </thead>
+      <tbody>
+        {matches.map((match: Match) => (
+          <Match
+            key={match.requestId}
+            match={match}
+            request={matchRequest}
+            showConnect={!!showConnect}
+            chatId={chatId}
+            columnsSendToChat={columnsSendToChat}
+          />
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
 const Room: NextPage = () => {
   const router = useRouter();
   const {
     config: showConfig = false,
     connect: showConnect = false,
     chatid: showChatId = false,
+    save: showSaveConfig = false,
   } = router.query || {};
   const [error, setError] = useState('');
 
@@ -70,7 +110,11 @@ const Room: NextPage = () => {
   const [propsToFilter, setPropsToFilter] = useState('');
   const [valuesToFilter, setValuesToFilter] = useState('');
 
-  const [slug, setSlug] = useState('generic');
+  const [slugInput, setSlugInput] = useState('');
+  const [slug, setSlug] = useState('');
+  useEffect(() => setSlug(slugify(slugInput)), [slugInput]);
+
+  const [matchType, setMatchType] = useState('generic');
   const [requestSpreadsheetId, setRequestSpreadsheetId] = useState('');
   const [requestSheetId, setRequestSheetId] = useState('');
   const [proposalSpreadsheetId, setProposalSpreadsheetId] = useState('');
@@ -86,6 +130,8 @@ const Room: NextPage = () => {
     propsToHaveCommonWords,
     propsToFilter,
     valuesToFilter,
+    chatId,
+    columnsSendToChat,
   });
   useEffect(() => {
     setMatchRequest({
@@ -94,12 +140,15 @@ const Room: NextPage = () => {
       proposalSpreadsheetId,
       proposalSheetId,
       slug,
+      matchType,
       propsToBeEqual,
       propsToBeGreater,
       propsToIgnore,
       propsToHaveCommonWords,
       propsToFilter,
       valuesToFilter,
+      chatId,
+      columnsSendToChat,
     });
   }, [
     requestSpreadsheetId,
@@ -107,12 +156,15 @@ const Room: NextPage = () => {
     proposalSpreadsheetId,
     proposalSheetId,
     slug,
+    matchType,
     propsToBeEqual,
     propsToBeGreater,
     propsToIgnore,
     propsToHaveCommonWords,
     propsToFilter,
     valuesToFilter,
+    chatId,
+    columnsSendToChat,
   ]);
   const [matches, setMatches] = useState<Match[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -139,6 +191,31 @@ const Room: NextPage = () => {
   useEffect(() => {
     fetchMacthes();
   }, []);
+
+  const saveMatchRequest = async () => {
+    if (!isValid(matchRequest)) return;
+    if (!slug.includes('-')) {
+      setError('Please, use 2 words for slug to make it more unique');
+    }
+
+    try {
+      setError('');
+      setIsLoading(true);
+      const response = await fetch('/api/save', {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        credentials: 'same-origin',
+        body: JSON.stringify({ ...matchRequest }),
+      });
+      setIsLoading(false);
+      if (!response.ok) setError('Please, ask administrator to get access.');
+      //router.push(`/${matchRequest.slug}`);
+    } catch (error) {
+      console.log({ error });
+      setError('Please, check spreadhseet id and name.');
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className={styles.main}>
@@ -236,41 +313,48 @@ const Room: NextPage = () => {
             )}
           </>
         )}
-        <select value={slug} onChange={(event) => setSlug(event.target.value)}>
+        <select value={matchType} onChange={(event) => setMatchType(event.target.value)}>
           <option value="generic">Generic matching</option>
           <option value="un-refugee">Refugee for UN matching</option>
         </select>
-        <button
-          disabled={isLoading || !isValid(matchRequest)}
-          className={styles.card}
-          onClick={fetchMacthes}
-        >
-          Find matches
-        </button>
+        <div className="flex flex-col">
+          {showSaveConfig && (
+            <>
+              <input
+                className="w-full text-md text-center items-center mb-2 mt-4"
+                type="text"
+                placeholder="Slug to save config to"
+                value={slugInput}
+                onChange={(e) => setSlugInput(e.target.value)}
+              />
+              <p>{`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}`}</p>
+              <button
+                disabled={isLoading || !isValid(matchRequest) || !slug}
+                className={styles.card}
+                onClick={saveMatchRequest}
+              >
+                Save
+              </button>
+            </>
+          )}
+          <button
+            disabled={isLoading || !isValid(matchRequest)}
+            className={styles.card}
+            onClick={fetchMacthes}
+          >
+            Find matches
+          </button>
+        </div>
         {error && <p>{error}</p>}
         {isLoading && <p>Loading...</p>}
       </div>
-      <table className={styles.matches}>
-        <thead>
-          <tr>
-            <th>Request</th>
-            <th>Proposals</th>
-            {!!showConnect && <th>Connect</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {matches.map((match: Match) => (
-            <Match
-              key={match.requestId}
-              match={match}
-              request={matchRequest}
-              showConnect={!!showConnect}
-              chatId={chatId}
-              columnsSendToChat={columnsSendToChat}
-            />
-          ))}
-        </tbody>
-      </table>
+      <MatchesTable
+        matches={matches}
+        matchRequest={matchRequest}
+        showConnect={!!showConnect}
+        chatId={chatId}
+        columnsSendToChat={columnsSendToChat}
+      />
     </div>
   );
 };

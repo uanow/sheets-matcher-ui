@@ -25,4 +25,6 @@ export const getMatches = async (matchRequest: MatchRequest): Promise<Match[]> =
 };
 
 export const getMatchFuncs = (matchRequest: MatchRequest) =>
-  matchRequest.slug === 'un-refugee' ? getRefugeeMatchFuncs : getGenericMatchFuncs(matchRequest);
+  matchRequest.matchType === 'un-refugee'
+    ? getRefugeeMatchFuncs
+    : getGenericMatchFuncs(matchRequest);

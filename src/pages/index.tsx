@@ -31,7 +31,7 @@ const Room: NextPage = () => {
       {
         /*user &&*/ <MatchesConfigComponent
           showConfig={!!showConfig}
-          showChatId={!!showChatId}
+          showChatId={!!showChatId && !!user}
           showSaveConfig={!!showSaveConfig && !!user}
           matches={matches}
           setMatches={setMatches}

@@ -1,4 +1,4 @@
-import Auth from '../components/auth/Auth';
+import { Auth } from '@supabase/ui';
 import { supabase } from '../utils/supabase';
 
 const Login = () => (

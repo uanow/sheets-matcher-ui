@@ -24,9 +24,11 @@ export interface MatchRequest {
 export type MatchRequestSnake = CamelCaseToSnakeNested<MatchRequest>;
 
 export const camelToSnake = (matchRequest: MatchRequest): MatchRequestSnake =>
+  // @ts-ignore
   snakecaseKeys(matchRequest);
 
 export const snakeToCamel = (matchRequest: MatchRequestSnake): MatchRequest =>
+  // @ts-ignore
   camelcaseKeys(matchRequest);
 
 export const isValid = (matchRequest: MatchRequest): boolean =>

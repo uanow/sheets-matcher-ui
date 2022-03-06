@@ -5,8 +5,10 @@ import { Match, MatchRequest } from '../match/types';
 import styles from '../styles/Home.module.css';
 import MatchesTable from '../components/matches';
 import MatchesConfigComponent from '../components/config';
+import { useUser } from '@supabase/supabase-auth-helpers/react';
 
 const Room: NextPage = () => {
+  const { user } = useUser();
   const router = useRouter();
   const [matches, setMatches] = useState<Match[]>([]);
   const [matchRequest, setMatchRequest] = useState<MatchRequest>({
@@ -26,16 +28,28 @@ const Room: NextPage = () => {
   return (
     <div className={styles.main}>
       <h1 className={styles.title}>Matches</h1>
-      <MatchesConfigComponent
-        showConfig={!!showConfig}
-        showChatId={!!showChatId}
-        showSaveConfig={!!showSaveConfig}
+      {
+        /*user &&*/ <MatchesConfigComponent
+          showConfig={!!showConfig}
+          showChatId={!!showChatId}
+          showSaveConfig={!!showSaveConfig && !!user}
+          matches={matches}
+          setMatches={setMatches}
+          matchRequest={matchRequest}
+          setMatchRequest={setMatchRequest}
+        />
+      }
+      <MatchesTable
         matches={matches}
-        setMatches={setMatches}
         matchRequest={matchRequest}
-        setMatchRequest={setMatchRequest}
+        showConnect={!!showConnect && !!user}
       />
-      <MatchesTable matches={matches} matchRequest={matchRequest} showConnect={!!showConnect} />
+      {/* {user && (
+        <>
+          <button onClick={() => supabaseClient.auth.signOut()}>Sign out</button>
+          <p>{user?.email}</p>
+        </>
+      )} */}
     </div>
   );
 };

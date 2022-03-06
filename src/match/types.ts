@@ -6,12 +6,14 @@ export interface MatchRequest {
   slug?: string;
   propsToBeEqual?: string;
   propsToBeGreater?: string;
+  propsToHaveCommonWords?: string;
   propsToIgnore?: string;
   propsToFilter?: string;
   valuesToFilter?: string;
   requestIdsToFilter?: number[];
   proposalIdsToFilter?: number[];
   chatId?: string;
+  columnsSendToChat?: string;
 }
 
 export const isValid = (matchRequest: MatchRequest): boolean =>

@@ -10,7 +10,9 @@ export const sendDetailsToChat = async (matchRequest: MatchRequest): Promise<num
   const proposals = (await getProposals(matchRequest, mapRowToProposal)).filter(filterProposals);
 
   const message = requests
-    .flatMap((request) => proposals.map((proposal) => matchToConnectString(request, proposal)))
+    .flatMap((request) =>
+      proposals.map((proposal) => matchToConnectString(request, proposal, matchRequest))
+    )
     .filter(Boolean)
     .join('%0A%0A');
 
@@ -22,5 +24,12 @@ export const sendDetailsToChat = async (matchRequest: MatchRequest): Promise<num
   return response.status;
 };
 
-const matchToConnectString = (request: any, proposal: any) =>
-  `Request №${request.rowNumber} by @${request.telegram} <-> Proposal №${proposal.rowNumber} by @${proposal.telegram}.`;
+const matchToConnectString = (request: any, proposal: any, matchRequest: MatchRequest) => {
+  // TODO: Potentially exposes columns hidden from operators, needs implementing chats approval.
+  const columnsSendToChat =
+    //matchRequest.columnsSendToChat?.split(',').filter(Boolean) ??
+    ['telegram'];
+  const details = columnsSendToChat.map((c) => `${request[c]} <-> ${proposal[c]}`).join('%0A');
+  // console.log({ columnsSendToChat, details, request, proposal });
+  return `Request №${request.rowNumber} <-> Proposal №${proposal.rowNumber}%0A${details}`;
+};

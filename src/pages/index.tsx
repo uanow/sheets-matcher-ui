@@ -9,11 +9,13 @@ const Match = ({
   request,
   showConnect,
   chatId,
+  columnsSendToChat,
 }: {
   match: Match;
   request: MatchRequest;
   showConnect: boolean;
   chatId: string;
+  columnsSendToChat: string;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const requestWithMatch: MatchRequest = {
@@ -21,6 +23,7 @@ const Match = ({
     requestIdsToFilter: [match.requestId],
     proposalIdsToFilter: match.proposalIds,
     chatId,
+    columnsSendToChat,
   };
   const handleConnect = async () => {
     setIsLoading(true);
@@ -57,6 +60,7 @@ const Room: NextPage = () => {
   const [error, setError] = useState('');
 
   const [chatId, setChatId] = useState('');
+  const [columnsSendToChat, setColumnsSendToChat] = useState('');
 
   const [propsToBeEqual, setPropsToBeEqual] = useState('');
   const [propsToBeGreater, setPropsToBeGreater] = useState('');
@@ -213,13 +217,22 @@ const Room: NextPage = () => {
               onChange={(e) => setValuesToFilter(e.target.value)}
             />
             {showChatId && (
-              <input
-                className="w-full text-md text-center items-center mb-2"
-                type="text"
-                placeholder="Telegram chat id"
-                value={chatId}
-                onChange={(e) => setChatId(e.target.value)}
-              />
+              <>
+                <input
+                  className="w-full text-md text-center items-center mb-2"
+                  type="text"
+                  placeholder="Telegram chat id"
+                  value={chatId}
+                  onChange={(e) => setChatId(e.target.value)}
+                />
+                <input
+                  className="w-full text-md text-center items-center mb-2"
+                  type="text"
+                  placeholder="Columns to send to telegram chat id"
+                  value={columnsSendToChat}
+                  onChange={(e) => setColumnsSendToChat(e.target.value)}
+                />
+              </>
             )}
           </>
         )}
@@ -253,6 +266,7 @@ const Room: NextPage = () => {
               request={matchRequest}
               showConnect={!!showConnect}
               chatId={chatId}
+              columnsSendToChat={columnsSendToChat}
             />
           ))}
         </tbody>

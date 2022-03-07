@@ -1,4 +1,4 @@
-import { Button, Input, Select } from '@supabase/ui';
+import { Button, Input, Select, Tabs } from '@supabase/ui';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { isValid, Match, MatchRequest } from '../match/types';
 import styles from '../styles/Home.module.css';
@@ -140,161 +140,171 @@ const MatchesConfigComponent = ({
     }
   };
 
+  const [activeTab, setActiveTab] = useState<'spreadsheets' | 'config' | 'save'>('spreadsheets');
+
   return (
     <div className="flex flex-col justify-center items-center w-2/4">
-      <Input
-        beforeLabel="* "
-        label="Requests spreadsheet id"
-        required
-        className="w-full text-md text-center items-center mb-4 mt-2"
-        type="text"
-        placeholder="1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
-        value={requestSpreadsheetId}
-        onChange={(e) => setRequestSpreadsheetId(e.target.value)}
-      />
-      <Input
-        beforeLabel="* "
-        label="Requests sheet name"
-        required
-        className="w-full text-md text-center items-center mb-4"
-        type="text"
-        placeholder="Sheet1"
-        value={requestSheetId}
-        onChange={(e) => setRequestSheetId(e.target.value)}
-      />
-      <Input
-        beforeLabel="* "
-        label="Proposals spreadsheet id"
-        required
-        className="w-full text-md text-center items-center mb-4"
-        type="text"
-        placeholder="1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
-        value={proposalSpreadsheetId}
-        onChange={(e) => setProposalSpreadsheetId(e.target.value)}
-      />
-      <Input
-        beforeLabel="* "
-        label="Proposals sheet name"
-        required
-        className="w-full text-md text-center items-center mb-4"
-        type="text"
-        placeholder="Sheet1"
-        value={proposalSheetId}
-        onChange={(e) => setProposalSheetId(e.target.value)}
-      />
-      {showConfig && (
-        <>
-          <Input
-            label="Columns: should be the same"
-            className="w-full text-md text-center items-center mb-4"
-            type="text"
-            placeholder="from,to"
-            value={propsToBeEqual}
-            onChange={(e) => setPropsToBeEqual(e.target.value)}
-          />
-          <Input
-            className="w-full text-md text-center items-center mb-4"
-            type="text"
-            label="Columns: should be >= "
-            placeholder="seats"
-            value={propsToBeGreater}
-            onChange={(e) => setPropsToBeGreater(e.target.value)}
-          />
-          <Input
-            className="w-full text-md text-center items-center mb-4"
-            type="text"
-            label="Columns: should be ignored"
-            placeholder="telegram,phone"
-            value={propsToIgnore}
-            onChange={(e) => setPropsToIgnore(e.target.value)}
-          />
-          <Input
-            className="w-full text-md text-center items-center mb-4"
-            type="text"
-            label="Columns: should have common words"
-            placeholder="list"
-            value={propsToHaveCommonWords}
-            onChange={(e) => setPropsToHaveCommonWords(e.target.value)}
-          />
-          <Input
-            className="w-full text-md text-center items-center mb-4"
-            type="text"
-            label="Columns: filter by"
-            placeholder="status"
-            value={propsToFilter}
-            onChange={(e) => setPropsToFilter(e.target.value)}
-          />
-          <Input
-            className="w-full text-md text-center items-center mb-4"
-            type="text"
-            label="Values to filter by for columns above"
-            placeholder="done"
-            value={valuesToFilter}
-            onChange={(e) => setValuesToFilter(e.target.value)}
-          />
-          {showChatId && (
-            <>
-              <Input
-                className="w-full text-md text-center items-center mb-4"
-                type="text"
-                label="Telegram chat id"
-                placeholder="-12347281"
-                value={chatId}
-                onChange={(e) => setChatId(e.target.value)}
-              />
-              <Input
-                className="w-full text-md text-center items-center mb-4"
-                type="text"
-                label="Columns to send to telegram chat id"
-                placeholder="priority,route"
-                value={columnsSendToChat}
-                onChange={(e) => setColumnsSendToChat(e.target.value)}
-              />
-            </>
-          )}
-        </>
-      )}
-      <div className="flex flex-col justify-center align-middle items-center w-full">
-        {showSaveConfig && (
-          <>
+      <div className="w-full mt-4">
+        <Tabs block type="cards" activeId={activeTab} onChange={(e: any) => setActiveTab(e)}>
+          <Tabs.Panel id="spreadsheets" label="Spreadsheets">
+            <Input
+              beforeLabel="* "
+              label="Requests spreadsheet id"
+              required
+              className="w-full text-md text-center items-center mb-4 mt-2"
+              type="text"
+              placeholder="1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
+              value={requestSpreadsheetId}
+              onChange={(e) => setRequestSpreadsheetId(e.target.value)}
+            />
+            <Input
+              beforeLabel="* "
+              label="Requests sheet name"
+              required
+              className="w-full text-md text-center items-center mb-4"
+              type="text"
+              placeholder="Sheet1"
+              value={requestSheetId}
+              onChange={(e) => setRequestSheetId(e.target.value)}
+            />
+            <Input
+              beforeLabel="* "
+              label="Proposals spreadsheet id"
+              required
+              className="w-full text-md text-center items-center mb-4"
+              type="text"
+              placeholder="1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
+              value={proposalSpreadsheetId}
+              onChange={(e) => setProposalSpreadsheetId(e.target.value)}
+            />
+            <Input
+              beforeLabel="* "
+              label="Proposals sheet name"
+              required
+              className="w-full text-md text-center items-center mb-4"
+              type="text"
+              placeholder="Sheet1"
+              value={proposalSheetId}
+              onChange={(e) => setProposalSheetId(e.target.value)}
+            />
+          </Tabs.Panel>
+          <Tabs.Panel id="config" label="Config">
+            <Input
+              label="Columns: should be the same"
+              className="w-full text-md text-center items-center mb-4"
+              type="text"
+              placeholder="from,to"
+              value={propsToBeEqual}
+              onChange={(e) => setPropsToBeEqual(e.target.value)}
+            />
             <Input
               className="w-full text-md text-center items-center mb-4"
               type="text"
-              label="Slug to save config to"
-              placeholder="un-refugee"
-              value={slugInput}
-              onChange={(e) => setSlugInput(e.target.value)}
+              label="Columns: should be >= "
+              placeholder="seats"
+              value={propsToBeGreater}
+              onChange={(e) => setPropsToBeGreater(e.target.value)}
             />
-            <p className="mb-4">{`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}`}</p>
-            <Button
-              block
-              size="large"
-              disabled={isLoading || !isValid(matchRequest) || !slug}
-              className="mb-4 text-2xl w-full"
-              onClick={saveMatchRequest}
-            >
-              Save
-            </Button>
-          </>
-        )}
-        <Select
-          className="mb-4 w-full"
-          value={matchType}
-          onChange={(event) => setMatchType(event.target.value)}
-        >
-          <Select.Option value="generic">Generic matching</Select.Option>
-          <Select.Option value="un-refugee">Refugee for UN matching</Select.Option>
-        </Select>
-        <Button
-          size="large"
-          block
-          disabled={isLoading || !isValid(matchRequest)}
-          className="mb-4 text-2xl w-full"
-          onClick={fetchMacthes}
-        >
-          Find matches
-        </Button>
+            <Input
+              className="w-full text-md text-center items-center mb-4"
+              type="text"
+              label="Columns: should be ignored"
+              placeholder="telegram,phone"
+              value={propsToIgnore}
+              onChange={(e) => setPropsToIgnore(e.target.value)}
+            />
+            <Input
+              className="w-full text-md text-center items-center mb-4"
+              type="text"
+              label="Columns: should have common words"
+              placeholder="list"
+              value={propsToHaveCommonWords}
+              onChange={(e) => setPropsToHaveCommonWords(e.target.value)}
+            />
+            <Input
+              className="w-full text-md text-center items-center mb-4"
+              type="text"
+              label="Columns: filter by"
+              placeholder="status"
+              value={propsToFilter}
+              onChange={(e) => setPropsToFilter(e.target.value)}
+            />
+            <Input
+              className="w-full text-md text-center items-center mb-4"
+              type="text"
+              label="Values to filter by for columns above"
+              placeholder="done"
+              value={valuesToFilter}
+              onChange={(e) => setValuesToFilter(e.target.value)}
+            />
+            {showChatId && (
+              <>
+                <Input
+                  className="w-full text-md text-center items-center mb-4"
+                  type="text"
+                  label="Telegram chat id"
+                  placeholder="-12347281"
+                  value={chatId}
+                  onChange={(e) => setChatId(e.target.value)}
+                />
+                <Input
+                  className="w-full text-md text-center items-center mb-4"
+                  type="text"
+                  label="Columns to send to telegram chat id"
+                  placeholder="priority,route"
+                  value={columnsSendToChat}
+                  onChange={(e) => setColumnsSendToChat(e.target.value)}
+                />
+              </>
+            )}
+          </Tabs.Panel>
+          <Tabs.Panel id="save" label="Save">
+            <div className="flex flex-col justify-center align-middle items-center w-full">
+              <Input
+                className="w-full text-md text-center items-center mb-4"
+                type="text"
+                beforeLabel="* "
+                label="Slug to save config to"
+                placeholder="un-refugee"
+                value={slugInput}
+                onChange={(e) => setSlugInput(e.target.value)}
+              />
+              <p className="mb-4">{`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}`}</p>
+              <Button
+                block
+                size="large"
+                disabled={isLoading || !isValid(matchRequest) || !slug}
+                className="mb-4 text-2xl w-full"
+                onClick={saveMatchRequest}
+              >
+                Save
+              </Button>
+            </div>
+          </Tabs.Panel>
+        </Tabs>
       </div>
+
+      {activeTab !== 'save' && (
+        <div className="flex flex-col justify-center align-middle items-center w-full">
+          <Select
+            className="mb-4 w-full"
+            value={matchType}
+            onChange={(event) => setMatchType(event.target.value)}
+          >
+            <Select.Option value="generic">Generic matching</Select.Option>
+            <Select.Option value="un-refugee">Refugee for UN matching</Select.Option>
+          </Select>
+          <Button
+            size="large"
+            block
+            disabled={isLoading || !isValid(matchRequest)}
+            className="mb-4 text-2xl w-full"
+            onClick={fetchMacthes}
+          >
+            Find matches
+          </Button>
+        </div>
+      )}
       {error && <p>{error}</p>}
       {isLoading && <p>Loading...</p>}
     </div>

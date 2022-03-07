@@ -1,3 +1,4 @@
+import { Button, Input, Select } from '@supabase/ui';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { isValid, Match, MatchRequest } from '../match/types';
 import styles from '../styles/Home.module.css';
@@ -141,91 +142,111 @@ const MatchesConfigComponent = ({
 
   return (
     <div className="flex flex-col justify-center items-center w-2/4">
-      <input
-        className="w-full text-md text-center items-center mb-2 mt-2"
+      <Input
+        beforeLabel="* "
+        label="Requests spreadsheet id"
+        required
+        className="w-full text-md text-center items-center mb-4 mt-2"
         type="text"
-        placeholder="Requests spreadsheet id: 1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
+        placeholder="1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
         value={requestSpreadsheetId}
         onChange={(e) => setRequestSpreadsheetId(e.target.value)}
       />
-      <input
-        className="w-full text-md text-center items-center mb-2"
+      <Input
+        beforeLabel="* "
+        label="Requests sheet name"
+        required
+        className="w-full text-md text-center items-center mb-4"
         type="text"
-        placeholder="Requests sheet name: Sheet1"
+        placeholder="Sheet1"
         value={requestSheetId}
         onChange={(e) => setRequestSheetId(e.target.value)}
       />
-      <input
-        className="w-full text-md text-center items-center mb-2"
+      <Input
+        beforeLabel="* "
+        label="Proposals spreadsheet id"
+        required
+        className="w-full text-md text-center items-center mb-4"
         type="text"
-        placeholder="Proposals spreadsheet id: 1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
+        placeholder="1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
         value={proposalSpreadsheetId}
         onChange={(e) => setProposalSpreadsheetId(e.target.value)}
       />
-      <input
-        className="w-full text-md text-center items-center mb-2"
+      <Input
+        beforeLabel="* "
+        label="Proposals sheet name"
+        required
+        className="w-full text-md text-center items-center mb-4"
         type="text"
-        placeholder="Proposals sheet name: Sheet1"
+        placeholder="Sheet1"
         value={proposalSheetId}
         onChange={(e) => setProposalSheetId(e.target.value)}
       />
       {showConfig && (
         <>
-          <input
-            className="w-full text-md text-center items-center mb-2"
+          <Input
+            label="Columns: should be the same"
+            className="w-full text-md text-center items-center mb-4"
             type="text"
-            placeholder="Columns should be same: 'from,to'"
+            placeholder="from,to"
             value={propsToBeEqual}
             onChange={(e) => setPropsToBeEqual(e.target.value)}
           />
-          <input
-            className="w-full text-md text-center items-center mb-2"
+          <Input
+            className="w-full text-md text-center items-center mb-4"
             type="text"
-            placeholder="Columns should be >= 'seats'"
+            label="Columns: should be >= "
+            placeholder="seats"
             value={propsToBeGreater}
             onChange={(e) => setPropsToBeGreater(e.target.value)}
           />
-          <input
-            className="w-full text-md text-center items-center mb-2"
+          <Input
+            className="w-full text-md text-center items-center mb-4"
             type="text"
-            placeholder="Columns should be ignored: 'telegram,phone'"
+            label="Columns: should be ignored"
+            placeholder="telegram,phone"
             value={propsToIgnore}
             onChange={(e) => setPropsToIgnore(e.target.value)}
           />
-          <input
-            className="w-full text-md text-center items-center mb-2"
+          <Input
+            className="w-full text-md text-center items-center mb-4"
             type="text"
-            placeholder="Columns should have common words: 'list'"
+            label="Columns: should have common words"
+            placeholder="list"
             value={propsToHaveCommonWords}
             onChange={(e) => setPropsToHaveCommonWords(e.target.value)}
           />
-          <input
-            className="w-full text-md text-center items-center mb-2"
+          <Input
+            className="w-full text-md text-center items-center mb-4"
             type="text"
-            placeholder="Columns to filter by: 'status'"
+            label="Columns: filter by"
+            placeholder="status"
             value={propsToFilter}
             onChange={(e) => setPropsToFilter(e.target.value)}
           />
-          <input
-            className="w-full text-md text-center items-center mb-2"
+          <Input
+            className="w-full text-md text-center items-center mb-4"
             type="text"
-            placeholder="Values to filter by for columns above: 'done'"
+            label="Values to filter by for columns above"
+            placeholder="done"
             value={valuesToFilter}
             onChange={(e) => setValuesToFilter(e.target.value)}
           />
           {showChatId && (
             <>
-              <input
-                className="w-full text-md text-center items-center mb-2"
+              <Input
+                className="w-full text-md text-center items-center mb-4"
                 type="text"
-                placeholder="Telegram chat id"
+                label="Telegram chat id"
+                placeholder="-12347281"
                 value={chatId}
                 onChange={(e) => setChatId(e.target.value)}
               />
-              <input
-                className="w-full text-md text-center items-center mb-2"
+              <Input
+                className="w-full text-md text-center items-center mb-4"
                 type="text"
-                placeholder="Columns to send to telegram chat id"
+                label="Columns to send to telegram chat id"
+                placeholder="priority,route"
                 value={columnsSendToChat}
                 onChange={(e) => setColumnsSendToChat(e.target.value)}
               />
@@ -233,37 +254,46 @@ const MatchesConfigComponent = ({
           )}
         </>
       )}
-      <select value={matchType} onChange={(event) => setMatchType(event.target.value)}>
-        <option value="generic">Generic matching</option>
-        <option value="un-refugee">Refugee for UN matching</option>
-      </select>
-      <div className="flex flex-col">
+      <div className="flex flex-col justify-center align-middle items-center w-full">
         {showSaveConfig && (
           <>
-            <input
-              className="w-full text-md text-center items-center mb-2 mt-4"
+            <Input
+              className="w-full text-md text-center items-center mb-4"
               type="text"
-              placeholder="Slug to save config to"
+              label="Slug to save config to"
+              placeholder="un-refugee"
               value={slugInput}
               onChange={(e) => setSlugInput(e.target.value)}
             />
-            <p>{`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}`}</p>
-            <button
+            <p className="mb-4">{`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}`}</p>
+            <Button
+              block
+              size="large"
               disabled={isLoading || !isValid(matchRequest) || !slug}
-              className={styles.card}
+              className="mb-4 text-2xl w-full"
               onClick={saveMatchRequest}
             >
               Save
-            </button>
+            </Button>
           </>
         )}
-        <button
+        <Select
+          className="mb-4 w-full"
+          value={matchType}
+          onChange={(event) => setMatchType(event.target.value)}
+        >
+          <Select.Option value="generic">Generic matching</Select.Option>
+          <Select.Option value="un-refugee">Refugee for UN matching</Select.Option>
+        </Select>
+        <Button
+          size="large"
+          block
           disabled={isLoading || !isValid(matchRequest)}
-          className={styles.card}
+          className="mb-4 text-2xl w-full"
           onClick={fetchMacthes}
         >
           Find matches
-        </button>
+        </Button>
       </div>
       {error && <p>{error}</p>}
       {isLoading && <p>Loading...</p>}

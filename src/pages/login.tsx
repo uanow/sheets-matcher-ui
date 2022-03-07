@@ -2,8 +2,14 @@ import { Auth } from '@supabase/ui';
 import { supabase } from '../utils/supabase';
 
 const Login = () => (
-  <div className="mx-auto max-w-xl">
-    <Auth view="magic_link" magicLink providers={['github']} supabaseClient={supabase} />
+  <div className="flex h-screen max-w-xl mx-auto">
+    <Auth
+      className="m-auto"
+      view="magic_link"
+      magicLink
+      providers={['github']}
+      supabaseClient={supabase}
+    />
   </div>
 );
 

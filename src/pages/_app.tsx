@@ -5,9 +5,9 @@ import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    // <UserProvider supabaseClient={supabaseClient}>
-    <Component {...pageProps} />
-    //</UserProvider>
+    <UserProvider supabaseClient={supabaseClient}>
+      <Component {...pageProps} />
+    </UserProvider>
   );
 }
 

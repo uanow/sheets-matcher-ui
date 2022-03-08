@@ -1,5 +1,6 @@
 import { camelToSnake, MatchRequest, MatchRequestSnake, snakeToCamel } from './../match/types';
 import { createClient } from '@supabase/supabase-js';
+import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 
 export const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 
@@ -13,6 +14,6 @@ export const loadMatchRequest = async (slug: string) => {
 };
 
 export const saveMatchRequest = async (matchRequest: MatchRequest) =>
-  await supabase
+  await supabaseClient
     .from('match_requests')
     .insert(camelToSnake(matchRequest), { returning: 'minimal' });

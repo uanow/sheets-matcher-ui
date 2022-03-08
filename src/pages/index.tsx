@@ -8,7 +8,8 @@ import MatchesConfigComponent from '../components/config';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
 
 const Room: NextPage = () => {
-  const { user } = useUser();
+  //const { user } = useUser();
+  const user = false;
   const router = useRouter();
   const [matches, setMatches] = useState<Match[]>([]);
   const [matchRequest, setMatchRequest] = useState<MatchRequest>({

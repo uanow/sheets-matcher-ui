@@ -143,7 +143,7 @@ const MatchesConfigComponent = ({
   const [activeTab, setActiveTab] = useState<'spreadsheets' | 'config' | 'save'>('spreadsheets');
 
   const TabSpreadsheet = (
-    <Tabs.Panel id="spreadsheets" label="Spreadsheets">
+    <Tabs.Panel id="spreadsheets" label="Spreadsheets" key="spreadsheets">
       <Input
         beforeLabel="* "
         label="Requests spreadsheet id"
@@ -188,7 +188,7 @@ const MatchesConfigComponent = ({
   );
 
   const TabConfig = (
-    <Tabs.Panel id="config" label="Config">
+    <Tabs.Panel id="config" label="Config" key="config">
       <Input
         label="Columns: should be the same"
         className="w-full text-md text-center items-center mb-4"
@@ -260,7 +260,7 @@ const MatchesConfigComponent = ({
     </Tabs.Panel>
   );
   const TabSave = (
-    <Tabs.Panel id="save" label="Save">
+    <Tabs.Panel id="save" label="Save" key="save">
       <div className="flex flex-col justify-center align-middle items-center w-full">
         <Input
           className="w-full text-md text-center items-center mb-4"

@@ -258,29 +258,31 @@ const MatchesConfigComponent = ({
               </>
             )}
           </Tabs.Panel>
-          <Tabs.Panel id="save" label="Save">
-            <div className="flex flex-col justify-center align-middle items-center w-full">
-              <Input
-                className="w-full text-md text-center items-center mb-4"
-                type="text"
-                beforeLabel="* "
-                label="Slug to save config to"
-                placeholder="un-refugee"
-                value={slugInput}
-                onChange={(e) => setSlugInput(e.target.value)}
-              />
-              <p className="mb-4">{`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}`}</p>
-              <Button
-                block
-                size="large"
-                disabled={isLoading || !isValid(matchRequest) || !slug}
-                className="mb-4 text-2xl w-full"
-                onClick={saveMatchRequest}
-              >
-                Save
-              </Button>
-            </div>
-          </Tabs.Panel>
+          {showSaveConfig && (
+            <Tabs.Panel id="save" label="Save">
+              <div className="flex flex-col justify-center align-middle items-center w-full">
+                <Input
+                  className="w-full text-md text-center items-center mb-4"
+                  type="text"
+                  beforeLabel="* "
+                  label="Slug to save config to"
+                  placeholder="un-refugee"
+                  value={slugInput}
+                  onChange={(e) => setSlugInput(e.target.value)}
+                />
+                <p className="mb-4">{`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}`}</p>
+                <Button
+                  block
+                  size="large"
+                  disabled={isLoading || !isValid(matchRequest) || !slug}
+                  className="mb-4 text-2xl w-full"
+                  onClick={saveMatchRequest}
+                >
+                  Save
+                </Button>
+              </div>
+            </Tabs.Panel>
+          )}
         </Tabs>
       </div>
 

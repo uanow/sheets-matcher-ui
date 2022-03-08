@@ -225,7 +225,7 @@ const MatchesConfigComponent = ({
         className="w-full text-md text-center items-center mb-4"
         type="text"
         label="Columns: filter by"
-        placeholder="status"
+        placeholder="status,priority"
         value={propsToFilter}
         onChange={(e) => setPropsToFilter(e.target.value)}
       />
@@ -233,7 +233,7 @@ const MatchesConfigComponent = ({
         className="w-full text-md text-center items-center mb-4"
         type="text"
         label="Values to filter by for columns above"
-        placeholder="done"
+        placeholder="new;medium,high"
         value={valuesToFilter}
         onChange={(e) => setValuesToFilter(e.target.value)}
       />

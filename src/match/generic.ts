@@ -54,8 +54,9 @@ const genericMatchAllPropsEqual = (
 const genericFilter = (
   request: { [key: string]: string | number },
   propsToFilter: string[],
-  valuesToFilter: (string | number)[]
-): boolean => propsToFilter.find((prop) => valuesToFilter.includes(request[prop])) === undefined;
+  valuesToFilter: (string | number)[][]
+): boolean =>
+  propsToFilter.find((prop, index) => !valuesToFilter[index].includes(request[prop])) === undefined;
 
 const getGenericMatchFuncs = (matchRequest: MatchRequest) => {
   const propsToIgnore = [
@@ -84,7 +85,7 @@ const getGenericMatchFuncs = (matchRequest: MatchRequest) => {
           genericFilter(
             request,
             matchRequest.propsToFilter?.split(',') ?? [], //['status'],
-            matchRequest.valuesToFilter?.split(',') ?? [] //['new']
+            matchRequest.valuesToFilter?.split(';')?.map((v) => v?.split(',')) ?? [[]] //['new']
           );
 
   // TODO: Brittle.

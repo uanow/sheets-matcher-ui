@@ -7,5 +7,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   console.log({ matchRequest });
   if (!isValid(matchRequest)) res.status(404);
   const { error } = await saveMatchRequest(matchRequest);
+  console.log({ error });
   res.status(error ? 500 : 200).end();
 }

@@ -14,6 +14,6 @@ export const loadMatchRequest = async (slug: string) => {
 };
 
 export const saveMatchRequest = async (matchRequest: MatchRequest) =>
-  await supabaseClient
+  await supabase
     .from('match_requests')
     .insert(camelToSnake(matchRequest), { returning: 'minimal' });

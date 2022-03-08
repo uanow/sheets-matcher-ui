@@ -7,7 +7,7 @@ const Login = () => (
       className="m-auto"
       view="magic_link"
       magicLink
-      providers={['github']}
+      providers={['discord', 'github']}
       supabaseClient={supabaseClient}
     />
   </div>

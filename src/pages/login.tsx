@@ -1,5 +1,5 @@
-import { Auth } from '@supabase/ui';
-import { supabase } from '../utils/supabase';
+import { Auth } from '@supabase/supabase-auth-helpers/react';
+import { supabaseClient } from '@supabase/supabase-auth-helpers/nextjs';
 
 const Login = () => (
   <div className="flex h-screen max-w-xl mx-auto">
@@ -8,7 +8,7 @@ const Login = () => (
       view="magic_link"
       magicLink
       providers={['github']}
-      supabaseClient={supabase}
+      supabaseClient={supabaseClient}
     />
   </div>
 );

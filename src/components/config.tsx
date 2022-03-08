@@ -142,147 +142,159 @@ const MatchesConfigComponent = ({
 
   const [activeTab, setActiveTab] = useState<'spreadsheets' | 'config' | 'save'>('spreadsheets');
 
+  const TabSpreadsheet = (
+    <Tabs.Panel id="spreadsheets" label="Spreadsheets">
+      <Input
+        beforeLabel="* "
+        label="Requests spreadsheet id"
+        required
+        className="w-full text-md text-center items-center mb-4 mt-2"
+        type="text"
+        placeholder="1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
+        value={requestSpreadsheetId}
+        onChange={(e) => setRequestSpreadsheetId(e.target.value)}
+      />
+      <Input
+        beforeLabel="* "
+        label="Requests sheet name"
+        required
+        className="w-full text-md text-center items-center mb-4"
+        type="text"
+        placeholder="Sheet1"
+        value={requestSheetId}
+        onChange={(e) => setRequestSheetId(e.target.value)}
+      />
+      <Input
+        beforeLabel="* "
+        label="Proposals spreadsheet id"
+        required
+        className="w-full text-md text-center items-center mb-4"
+        type="text"
+        placeholder="1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
+        value={proposalSpreadsheetId}
+        onChange={(e) => setProposalSpreadsheetId(e.target.value)}
+      />
+      <Input
+        beforeLabel="* "
+        label="Proposals sheet name"
+        required
+        className="w-full text-md text-center items-center mb-4"
+        type="text"
+        placeholder="Sheet1"
+        value={proposalSheetId}
+        onChange={(e) => setProposalSheetId(e.target.value)}
+      />
+    </Tabs.Panel>
+  );
+
+  const TabConfig = (
+    <Tabs.Panel id="config" label="Config">
+      <Input
+        label="Columns: should be the same"
+        className="w-full text-md text-center items-center mb-4"
+        type="text"
+        placeholder="from,to"
+        value={propsToBeEqual}
+        onChange={(e) => setPropsToBeEqual(e.target.value)}
+      />
+      <Input
+        className="w-full text-md text-center items-center mb-4"
+        type="text"
+        label="Columns: should be >= "
+        placeholder="seats"
+        value={propsToBeGreater}
+        onChange={(e) => setPropsToBeGreater(e.target.value)}
+      />
+      <Input
+        className="w-full text-md text-center items-center mb-4"
+        type="text"
+        label="Columns: should be ignored"
+        placeholder="telegram,phone"
+        value={propsToIgnore}
+        onChange={(e) => setPropsToIgnore(e.target.value)}
+      />
+      <Input
+        className="w-full text-md text-center items-center mb-4"
+        type="text"
+        label="Columns: should have common words"
+        placeholder="list"
+        value={propsToHaveCommonWords}
+        onChange={(e) => setPropsToHaveCommonWords(e.target.value)}
+      />
+      <Input
+        className="w-full text-md text-center items-center mb-4"
+        type="text"
+        label="Columns: filter by"
+        placeholder="status"
+        value={propsToFilter}
+        onChange={(e) => setPropsToFilter(e.target.value)}
+      />
+      <Input
+        className="w-full text-md text-center items-center mb-4"
+        type="text"
+        label="Values to filter by for columns above"
+        placeholder="done"
+        value={valuesToFilter}
+        onChange={(e) => setValuesToFilter(e.target.value)}
+      />
+      {showChatId && (
+        <>
+          <Input
+            className="w-full text-md text-center items-center mb-4"
+            type="text"
+            label="Telegram chat id"
+            placeholder="-12347281"
+            value={chatId}
+            onChange={(e) => setChatId(e.target.value)}
+          />
+          <Input
+            className="w-full text-md text-center items-center mb-4"
+            type="text"
+            label="Columns to send to telegram chat id"
+            placeholder="priority,route"
+            value={columnsSendToChat}
+            onChange={(e) => setColumnsSendToChat(e.target.value)}
+          />
+        </>
+      )}
+    </Tabs.Panel>
+  );
+  const TabSave = (
+    <Tabs.Panel id="save" label="Save">
+      <div className="flex flex-col justify-center align-middle items-center w-full">
+        <Input
+          className="w-full text-md text-center items-center mb-4"
+          type="text"
+          beforeLabel="* "
+          label="Slug to save config to"
+          placeholder="un-refugee"
+          value={slugInput}
+          onChange={(e) => setSlugInput(e.target.value)}
+        />
+        <p className="mb-4">{`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}`}</p>
+        <Button
+          block
+          size="large"
+          disabled={isLoading || !isValid(matchRequest) || !slug}
+          className="mb-4 text-2xl w-full"
+          onClick={saveMatchRequest}
+        >
+          Save
+        </Button>
+      </div>
+    </Tabs.Panel>
+  );
+
+  const tabs = [];
+  tabs.push(TabSpreadsheet);
+  tabs.push(TabConfig);
+  if (showSaveConfig) tabs.push(TabSave);
+
   return (
     <div className="flex flex-col justify-center items-center w-2/4">
       <div className="w-full mt-4">
         <Tabs block type="cards" activeId={activeTab} onChange={(e: any) => setActiveTab(e)}>
-          <Tabs.Panel id="spreadsheets" label="Spreadsheets">
-            <Input
-              beforeLabel="* "
-              label="Requests spreadsheet id"
-              required
-              className="w-full text-md text-center items-center mb-4 mt-2"
-              type="text"
-              placeholder="1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
-              value={requestSpreadsheetId}
-              onChange={(e) => setRequestSpreadsheetId(e.target.value)}
-            />
-            <Input
-              beforeLabel="* "
-              label="Requests sheet name"
-              required
-              className="w-full text-md text-center items-center mb-4"
-              type="text"
-              placeholder="Sheet1"
-              value={requestSheetId}
-              onChange={(e) => setRequestSheetId(e.target.value)}
-            />
-            <Input
-              beforeLabel="* "
-              label="Proposals spreadsheet id"
-              required
-              className="w-full text-md text-center items-center mb-4"
-              type="text"
-              placeholder="1fgmYoJMn6282jzdfjsHsdsd788UYc_xUITy6hIL6"
-              value={proposalSpreadsheetId}
-              onChange={(e) => setProposalSpreadsheetId(e.target.value)}
-            />
-            <Input
-              beforeLabel="* "
-              label="Proposals sheet name"
-              required
-              className="w-full text-md text-center items-center mb-4"
-              type="text"
-              placeholder="Sheet1"
-              value={proposalSheetId}
-              onChange={(e) => setProposalSheetId(e.target.value)}
-            />
-          </Tabs.Panel>
-          <Tabs.Panel id="config" label="Config">
-            <Input
-              label="Columns: should be the same"
-              className="w-full text-md text-center items-center mb-4"
-              type="text"
-              placeholder="from,to"
-              value={propsToBeEqual}
-              onChange={(e) => setPropsToBeEqual(e.target.value)}
-            />
-            <Input
-              className="w-full text-md text-center items-center mb-4"
-              type="text"
-              label="Columns: should be >= "
-              placeholder="seats"
-              value={propsToBeGreater}
-              onChange={(e) => setPropsToBeGreater(e.target.value)}
-            />
-            <Input
-              className="w-full text-md text-center items-center mb-4"
-              type="text"
-              label="Columns: should be ignored"
-              placeholder="telegram,phone"
-              value={propsToIgnore}
-              onChange={(e) => setPropsToIgnore(e.target.value)}
-            />
-            <Input
-              className="w-full text-md text-center items-center mb-4"
-              type="text"
-              label="Columns: should have common words"
-              placeholder="list"
-              value={propsToHaveCommonWords}
-              onChange={(e) => setPropsToHaveCommonWords(e.target.value)}
-            />
-            <Input
-              className="w-full text-md text-center items-center mb-4"
-              type="text"
-              label="Columns: filter by"
-              placeholder="status"
-              value={propsToFilter}
-              onChange={(e) => setPropsToFilter(e.target.value)}
-            />
-            <Input
-              className="w-full text-md text-center items-center mb-4"
-              type="text"
-              label="Values to filter by for columns above"
-              placeholder="done"
-              value={valuesToFilter}
-              onChange={(e) => setValuesToFilter(e.target.value)}
-            />
-            {showChatId && (
-              <>
-                <Input
-                  className="w-full text-md text-center items-center mb-4"
-                  type="text"
-                  label="Telegram chat id"
-                  placeholder="-12347281"
-                  value={chatId}
-                  onChange={(e) => setChatId(e.target.value)}
-                />
-                <Input
-                  className="w-full text-md text-center items-center mb-4"
-                  type="text"
-                  label="Columns to send to telegram chat id"
-                  placeholder="priority,route"
-                  value={columnsSendToChat}
-                  onChange={(e) => setColumnsSendToChat(e.target.value)}
-                />
-              </>
-            )}
-          </Tabs.Panel>
-          {showSaveConfig && (
-            <Tabs.Panel id="save" label="Save">
-              <div className="flex flex-col justify-center align-middle items-center w-full">
-                <Input
-                  className="w-full text-md text-center items-center mb-4"
-                  type="text"
-                  beforeLabel="* "
-                  label="Slug to save config to"
-                  placeholder="un-refugee"
-                  value={slugInput}
-                  onChange={(e) => setSlugInput(e.target.value)}
-                />
-                <p className="mb-4">{`${process.env.NEXT_PUBLIC_BASE_URL}/${slug}`}</p>
-                <Button
-                  block
-                  size="large"
-                  disabled={isLoading || !isValid(matchRequest) || !slug}
-                  className="mb-4 text-2xl w-full"
-                  onClick={saveMatchRequest}
-                >
-                  Save
-                </Button>
-              </div>
-            </Tabs.Panel>
-          )}
+          {tabs}
         </Tabs>
       </div>
 

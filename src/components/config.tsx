@@ -1,6 +1,6 @@
 import { Button, Input, Select, Tabs } from '@supabase/ui';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { isValid, Match, MatchRequest } from '../match/types';
+import { isValid, Match, MatchRequest, MessengerTypes, SourceTypes } from '../match/types';
 import styles from '../styles/Home.module.css';
 import { slugify } from '../utils/utils';
 
@@ -23,6 +23,7 @@ const MatchesConfigComponent = ({
 }) => {
   const [error, setError] = useState('');
 
+  const [messenger, setMessenger] = useState<MessengerTypes>('telegram');
   const [chatId, setChatId] = useState('');
   const [columnsSendToChat, setColumnsSendToChat] = useState('');
 
@@ -39,6 +40,7 @@ const MatchesConfigComponent = ({
   useEffect(() => setSlug(slugify(slugInput)), [slugInput]);
 
   const [matchType, setMatchType] = useState('generic');
+  const [sourceType, setSourceType] = useState<SourceTypes>('sheets');
   const [requestSpreadsheetId, setRequestSpreadsheetId] = useState('');
   const [requestSheetId, setRequestSheetId] = useState('');
   const [proposalSpreadsheetId, setProposalSpreadsheetId] = useState('');
@@ -65,6 +67,7 @@ const MatchesConfigComponent = ({
       proposalSheetId,
       slug,
       matchType,
+      sourceType,
       propsToBeEqual,
       propsToBeGreater,
       propsToIgnore,
@@ -72,6 +75,7 @@ const MatchesConfigComponent = ({
       propsToFilter,
       valuesToFilter,
       chatId,
+      messenger,
       columnsSendToChat,
     });
   }, [
@@ -81,6 +85,7 @@ const MatchesConfigComponent = ({
     proposalSheetId,
     slug,
     matchType,
+    sourceType,
     propsToBeEqual,
     propsToBeGreater,
     propsToIgnore,
@@ -88,6 +93,7 @@ const MatchesConfigComponent = ({
     propsToFilter,
     valuesToFilter,
     chatId,
+    messenger,
     columnsSendToChat,
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -184,6 +190,18 @@ const MatchesConfigComponent = ({
         value={proposalSheetId}
         onChange={(e) => setProposalSheetId(e.target.value)}
       />
+      (
+      <Select
+        className="mb-4 w-full"
+        value={sourceType}
+        onChange={(event) => setSourceType(event.target.value as SourceTypes)}
+      >
+        <Select.Option value="sheets">Google sheets</Select.Option>
+        <Select.Option value="airtable">
+          Airtable (please, create a view named Matcher)
+        </Select.Option>
+      </Select>
+      )
     </Tabs.Panel>
   );
 
@@ -239,6 +257,15 @@ const MatchesConfigComponent = ({
       />
       {showChatId && (
         <>
+          {/* <Select
+            className="mb-4 w-full"
+            value={messenger}
+            onChange={(event) => setMessenger(event.target.value as MessengerTypes)}
+          >
+            <Select.Option value="telegram">Telegram</Select.Option>
+            <Select.Option value="slack">Slack</Select.Option>
+            <Select.Option value="discord">Discord</Select.Option>
+          </Select> */}
           <Input
             className="w-full text-md text-center items-center mb-4"
             type="text"

@@ -75,3 +75,8 @@ const saveMatches = async (
   );
   await sheet.saveUpdatedCells();
 };
+
+export const getSheetsRetrieveFuncs = {
+  getRequests,
+  getProposals,
+};

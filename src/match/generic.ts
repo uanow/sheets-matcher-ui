@@ -90,8 +90,10 @@ const getGenericMatchFuncs = (matchRequest: MatchRequest) => {
 
   // TODO: Brittle.
   const id = (request: any) => {
-    const { _sheet, _rowNumber, _rawData, ...props } = request;
-    return { ...props, rowNumber: request.rowNumber };
+    const { _sheet, _rowNumber, _rawData, _rawJson, _table, ...props } = request;
+    return props.fields && _rawJson // Brittle, airtable detection.
+      ? { ...props.fields, rowNumber: request.rowNumber ?? request.id }
+      : { ...props, rowNumber: request.rowNumber ?? request.id };
   };
 
   return {

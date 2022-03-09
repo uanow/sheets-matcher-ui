@@ -2,6 +2,8 @@ import snakecaseKeys from 'snakecase-keys';
 import camelcaseKeys from 'camelcase-keys';
 import { CamelCaseToSnakeNested } from '../utils/utils';
 
+export type MessengerTypes = 'telegram' | 'slack' | 'discord';
+export type SourceTypes = 'sheets' | 'airtable';
 export interface MatchRequest {
   requestSpreadsheetId: string;
   requestSheetId: string;
@@ -9,6 +11,7 @@ export interface MatchRequest {
   proposalSheetId: string;
   slug?: string;
   matchType?: string;
+  sourceType?: SourceTypes;
   propsToBeEqual?: string;
   propsToBeGreater?: string;
   propsToHaveCommonWords?: string;
@@ -19,6 +22,7 @@ export interface MatchRequest {
   proposalIdsToFilter?: number[];
   chatId?: string;
   columnsSendToChat?: string;
+  messenger?: MessengerTypes;
 }
 
 export type MatchRequestSnake = CamelCaseToSnakeNested<MatchRequest>;

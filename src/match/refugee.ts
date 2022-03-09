@@ -22,19 +22,19 @@ export interface Proposal {
 }
 
 export const mapRowToProposal = (row: any): Proposal => ({
-  rowNumber: row.rowNumber,
-  status: row['Status'],
+  rowNumber: row.rowNumber ?? row.id,
+  status: row['Status'] ?? row.fields['Status'],
   name: row['Full name'],
-  city: row['City where you can host'],
-  country: row['Country where you can host'],
-  languages: row['What languages you speak?'],
+  city: row['City where you can host'] ?? row.fields['City Where Host'],
+  country: row['Country where you can host'] ?? row.fields['Country Where Host'],
+  languages: row['What languages you speak?'] ?? row.fields['Languages'],
   contact: row['How to contact you?'],
   social: row['Link to your social media'],
   phone: row['Phone number'],
-  seats: row['Number of people you can host?'],
+  seats: row['Number of people you can host?'] ?? row.fields['Guests Count'],
   when_from: row["What's a start date you can host from?"],
   when_to: row['Till what date you can host?'],
-  pets: row['Available for pets hosting?'],
+  pets: row['Available for pets hosting?'] ?? row.fields['Pets possible'],
   transfer: row['Do you have a car to help with a transfer?'],
   travel_distance: row["How far you're ready to travel to pick people up?"],
   refugee: row['Refugee'],
@@ -62,16 +62,16 @@ export interface Request {
 }
 
 export const mapRowToRequest = (row: any): Request => ({
-  rowNumber: row.rowNumber,
-  status: row['статус заявки'],
+  rowNumber: row.rowNumber ?? row.id,
+  status: row['статус заявки'] ?? row.fields['Status'],
   email: row['Пошта'],
   name: row["Ім'я"],
   from: row['Ваша теперішня локація'],
-  city: row['В яке місто прямуєте?'],
-  country: row['В яку країну прямуєте?'],
+  city: row['В яке місто прямуєте?'] ?? row.fields['City Destination'],
+  country: row['В яку країну прямуєте?'] ?? row.fields['Country Destination'],
   languages: row['Якими мовами спілкуєтесь?'],
   contact: row['Контактний номер'],
-  seats: row['Скільки людей'],
+  seats: row['Скільки людей'] ?? row.fields['People Count'],
   when_from: row['Коли виїзд'],
   pets: row['Чи є тварини?'],
   kids: row['Чи є діти?'],
@@ -115,7 +115,7 @@ const match = (request: Request, proposal: Proposal): boolean =>
 const filterRequests = (request: Request): boolean =>
   !request.host && ['new', 'Delegated to i1'].includes(request.status);
 const filterProposals = (proposal: Proposal): boolean =>
-  !proposal.refugee && ['new'].includes(proposal.status);
+  !proposal.refugee && ['new', 'Todo'].includes(proposal.status);
 
 const getRefugeeMatchFuncs = {
   match,

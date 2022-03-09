@@ -1,6 +1,6 @@
 import { getMatches } from '../match/match';
 import { Match, MatchRequest } from '../match/types';
-import { loadMatchRequest } from '../utils/supabase';
+import { loadMatchRequest, supabase } from '../utils/supabase';
 import styles from '../styles/Home.module.css';
 import MatchesTable from '../components/matches';
 
@@ -13,11 +13,19 @@ function MatchPage({ matchRequest, matches }: { matchRequest: MatchRequest; matc
   );
 }
 
-export const getServerSideProps = async (context: { query: { room: any } }) => {
+export const getServerSideProps = async (context: { query: { room: any }; req: any }) => {
   const { room } = context.query;
   const { data: matchRequest, error } = await loadMatchRequest(room);
 
   if (!matchRequest) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const user = await supabase.auth.api.getUserByCookie(context.req);
+
+  if (!user.user && matchRequest.isPrivate) {
     return {
       notFound: true,
     };

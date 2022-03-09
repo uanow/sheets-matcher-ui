@@ -23,6 +23,7 @@ export interface MatchRequest {
   chatId?: string;
   columnsSendToChat?: string;
   messenger?: MessengerTypes;
+  isPrivate?: boolean;
 }
 
 export type MatchRequestSnake = CamelCaseToSnakeNested<MatchRequest>;

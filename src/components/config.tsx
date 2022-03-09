@@ -190,7 +190,6 @@ const MatchesConfigComponent = ({
         value={proposalSheetId}
         onChange={(e) => setProposalSheetId(e.target.value)}
       />
-      (
       <Select
         className="mb-4 w-full"
         value={sourceType}
@@ -201,7 +200,6 @@ const MatchesConfigComponent = ({
           Airtable (please, create a view named Matcher)
         </Select.Option>
       </Select>
-      )
     </Tabs.Panel>
   );
 

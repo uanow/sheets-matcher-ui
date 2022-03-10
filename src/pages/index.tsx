@@ -6,6 +6,7 @@ import styles from '../styles/Home.module.css';
 import MatchesTable from '../components/matches';
 import MatchesConfigComponent from '../components/config';
 import { useUser } from '@supabase/supabase-auth-helpers/react';
+import { withAuthRequired } from '@supabase/supabase-auth-helpers/nextjs';
 
 const Room: NextPage = () => {
   const { user } = useUser();
@@ -55,3 +56,5 @@ const Room: NextPage = () => {
 };
 
 export default Room;
+
+export const getServerSideProps = withAuthRequired({ redirectTo: '/login' });
